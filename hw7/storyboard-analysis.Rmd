@@ -1,0 +1,67 @@
+---
+title: "Story Board-EDA"
+author: "Nirmal kumar Ravi"
+date: "August 10, 2016"
+output: html_document
+---
+
+
+### import data
+```{r}
+dat <- read.csv('./data/custodial-deaths.csv',header = T,sep=",")
+dat <- dat[,c(1:12)]
+names(dat)
+head(dat)
+```
+
+
+### modify date
+```{r}
+dat$Death.Date <- as.Date(dat$Death.Date,'%m/%d/%Y')
+dat$Death.Date.year <- as.numeric(format(dat$Death.Date,'%Y'))
+```
+
+
+### Deaths occured each year catogerized by custody type
+```{r}
+library(ggplot2)
+ggplot(dat,aes(Death.Date.year,fill = Custody.Type)) +
+  geom_histogram(bins = 30) +
+  xlab("Year") +
+  ylab("# number of deats")+
+  ggtitle("Deaths/year grouped by custody type")
+
+```
+
+### Ethnicity of all death
+
+```{r}
+ethn <- table(dat$Ethnicity)
+ethn <- as.data.frame(ethn)
+
+ggplot(ethn, aes(x="", y=Freq, fill=Var1)) +
+  geom_bar(width = 1, stat = "identity") +
+   coord_polar("y", start=0)
+
+```
+
+### how death happened?
+
+```{r}
+death_manner <- table(dat$Manner.Death)
+death_manner <- as.data.frame(death_manner)
+ggplot(death_manner, aes(x="", y=Freq, fill=Var1)) +
+  geom_bar(width = 1, stat = "identity") +
+   coord_polar("y", start=0)
+```
+
+### Histogram on age of the person by sex
+
+```{r}
+ggplot(dat,aes(Age,fill = Sex)) +
+  geom_histogram(bins = 30)
+
+```
+
+
+
